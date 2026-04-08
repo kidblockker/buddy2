@@ -1,3 +1,42 @@
+name: Build Buddy APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant execute permission to gradlew
+        run: chmod +x BuddyApp2_2/BuddyApp2/gradlew
+
+      - name: Build Debug APK
+        working-directory: BuddyApp2_2/BuddyApp2
+        run: ./gradlew assembleDebug --no-daemon --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Buddy-debug-APK
+          path: BuddyApp2_2/BuddyApp2/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 30
+
+
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
