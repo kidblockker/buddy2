@@ -1,2 +1,0 @@
--keep class com.buddy.app.** { *; }
--dontwarn okhttp3.**
